@@ -378,20 +378,11 @@ namespace Jakaria.SessionComponents
         {
             if (planet == null || planet.Generator == null || !MyAPIGateway.Session.IsServer)
                 return false;
-
+        
             if (planet.Components.Has<WaterComponent>())
                 return false;
 
-            if (!_modComponent.AddWater(planet))
-                return false;
-
-            WaterComponent water;
-            // WaterComponent assigns WaterSettings.Default by reference and a dedicated server has no sync loopback to replace it
-            if (planet.Components.TryGet<WaterComponent>(out water))
-                water.Settings = MyAPIGateway.Utilities.SerializeFromBinary<WaterSettings>(
-                    MyAPIGateway.Utilities.SerializeToBinary(water.Settings));
-
-            return true;
+            return _modComponent.AddWater(planet, new WaterSettings());
         }
 
         public void ForceSync()
